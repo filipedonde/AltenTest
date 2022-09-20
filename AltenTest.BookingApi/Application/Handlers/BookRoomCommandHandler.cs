@@ -37,7 +37,7 @@ namespace AltenTest.BookingApi.Application.Handlers
                 return new CommandResponse(ValidationResult);
             }
 
-            Models.Reservation newReservation = new Models.Reservation { Guest = message.Guest, EndDate = message.EndDate, StartDate = message.StartDate };
+            Models.Reservation newReservation = new Models.Reservation { Guest = message.Guest, EndDate = message.EndDate.Date, StartDate = message.StartDate.Date };
             _reservationRepository.Add(newReservation);
 
             ValidationResult= await SaveData(_reservationRepository.UnitOfWork);

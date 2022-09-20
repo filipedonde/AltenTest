@@ -28,7 +28,7 @@ namespace AltenTest.BookingApi.Application.Handlers
                 return new CommandResponse(ValidationResult);
             }
 
-            if (!await _reservationRepository.IsAvailable(message.StartDate, message.EndDate))
+            if (!await _reservationRepository.IsAvailable(message.StartDate, message.EndDate, message.ReservationNumber))
             {
                 AddError(NOT_AVAILABLE_MESSAGE);
                 return new CommandResponse(ValidationResult);
@@ -43,8 +43,8 @@ namespace AltenTest.BookingApi.Application.Handlers
             }
 
             reservation.Guest = message.Guest;
-            reservation.StartDate = message.StartDate;
-            reservation.EndDate = message.EndDate;
+            reservation.StartDate = message.StartDate.Date;
+            reservation.EndDate = message.EndDate.Date;
 
             _reservationRepository.Update(reservation);
 

@@ -29,7 +29,7 @@ namespace AltenTest.BookingApi.Data.Repository
             return await _bookingContext.Reservations.AsNoTracking()
                 .Where(r => !r.IsCancelled &&
                             (
-                                (r.StartDate >= startDate && r.StartDate <= endDate)|| ((r.EndDate >= startDate && r.EndDate <= endDate))
+                                (r.StartDate >= startDate && r.StartDate <= endDate) || ((r.EndDate >= startDate && r.EndDate <= endDate))
                             //(r.StartDate <= startDate && r.EndDate >= startDate) || (r.StartDate <= endDate && r.EndDate >= endDate)
                             )
                         )
@@ -38,7 +38,14 @@ namespace AltenTest.BookingApi.Data.Repository
 
         public async Task<bool> IsAvailable(DateTime startDate, DateTime endDate)
         {
-            return !(await GetReservations(startDate, endDate)).Any();
+            return await IsAvailable(startDate, endDate, null);
+        }
+
+        public async Task<bool> IsAvailable(DateTime startDate, DateTime endDate,int? excludeParameter)
+        {
+            IEnumerable<Reservation> reservations = await GetReservations(startDate, endDate);
+
+            return excludeParameter.HasValue ? !reservations.Any(r => r.ReservationNumber != excludeParameter) : !reservations.Any();
         }
 
         public async Task<Reservation> GetReservation(int reservationNumber)
